@@ -19,8 +19,9 @@ namespace bacit_dotnet.MVC.Controllers
         [HttpGet]
         public IActionResult UserData()
         {
-
+            Console.WriteLine("UserData");
             var data = sqlConnector.GetUsers();
+            Console.WriteLine(data);
             var model = new UsersModel();
             model.Users = data;
             return View("Users", model);
