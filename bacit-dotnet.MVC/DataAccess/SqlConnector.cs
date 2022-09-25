@@ -1,4 +1,5 @@
 ﻿using bacit_dotnet.MVC.Entities;
+using bacit_dotnet.MVC.Models.Suggestions;
 using MySqlConnector;
 
 namespace bacit_dotnet.MVC.DataAccess
@@ -31,13 +32,53 @@ namespace bacit_dotnet.MVC.DataAccess
             connection.Close();
             return users;
         }
+        public void SetUsers()
+        {
+            using var connection = new MySqlConnection(config.GetConnectionString("MariaDb"));
+            connection.Open();
+            var query = "Insert into users(id,name,email,phone) values (2, 'Even','even@lgbtq.com','67864000')";
+            WriteData(query, connection);
+        }
+        public void SetSuggestions(SuggestionViewModel model)
+        {
+            using var connection = new MySqlConnection(config.GetConnectionString("MariaDb"));
+            connection.Open();
+            var query = "Insert into suggestions(title,name,team,description,TimeStamp) values (@title,@name,@team,@description,@timestamp)";
+            WriteSuggestions(query, connection, model);
 
+
+            /*create table suggestions(title varchar(32),name varchar(32),team int, description varchar(32), TimeStamp varchar(32));
+Query OK, 0 rows affected (0.490 sec)
+*/
+        }
         private MySqlDataReader ReadData(string query, MySqlConnection conn)
         {
             using var command = conn.CreateCommand();
             command.CommandType = System.Data.CommandType.Text;
             command.CommandText = query;
             return command.ExecuteReader(); ;
+        }
+
+        private void WriteData(string query, MySqlConnection conn)
+        {
+            using var command = conn.CreateCommand();
+            command.CommandType = System.Data.CommandType.Text;
+            command.CommandText = query;
+            command.ExecuteNonQuery(); ;
+
+        }
+
+        private void WriteSuggestions(string query, MySqlConnection conn, SuggestionViewModel model)
+        {
+            using var command = conn.CreateCommand();
+            command.CommandType = System.Data.CommandType.Text;
+            command.CommandText = query;
+            command.Parameters.AddWithValue("@title", model.Title);
+            command.Parameters.AddWithValue("@name", model.Name);
+            command.Parameters.AddWithValue("@team", model.Team);
+            command.Parameters.AddWithValue("@description", model.Description);
+            command.Parameters.AddWithValue("@timestamp", model.TimeStamp);
+            command.ExecuteNonQuery(); ;
         }
     }
 }

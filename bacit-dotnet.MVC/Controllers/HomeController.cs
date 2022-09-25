@@ -28,6 +28,16 @@ namespace bacit_dotnet.MVC.Controllers
 
         }
         [HttpGet]
+        public IActionResult SetData()
+        {
+            Console.WriteLine("SetData");
+            sqlConnector.SetUsers();
+            Console.WriteLine("Satt bruker");
+
+            return View("Insert");
+
+        }
+        [HttpGet]
         public IActionResult Index()
         {
             var model = new RazorViewModel
